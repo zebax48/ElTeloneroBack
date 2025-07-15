@@ -3,12 +3,12 @@ const User = require('../models/User');
 const router = express.Router();
 const { registerUser, loginUser, updateUser, deleteUser, getAllUsers, logoutUser, getUser } = require('../controllers/userController');
 const { updateUserPassword } = require('../controllers/userController.js');
-const { sendNewPasswordEmail } = require('../emailService');
+//const { sendNewPasswordEmail } = require('../emailService');
 const authMiddleware = require('../middleware/authMiddleware.js');
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
-router.post('/forgot-password', async (req, res) => {
+/*router.post('/forgot-password', async (req, res) => {
     const { username } = req.body;
 
     try {
@@ -34,7 +34,7 @@ router.post('/forgot-password', async (req, res) => {
         console.error('Error al restablecer la contraseña:', error);
         return res.status(500).json({ message: 'Error al restablecer la contraseña.' });
     }
-});
+});*/
 
 router.use(authMiddleware);
 router.put('/update/:username', updateUser);
