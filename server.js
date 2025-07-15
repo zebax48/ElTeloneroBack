@@ -6,7 +6,15 @@ const connectDB = require('./config');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const cors = require('cors');
-app.use(cors());
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://eltelonerosoyyo.onrender.com'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 connectDB();
 
