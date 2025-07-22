@@ -6,7 +6,6 @@ const { updateUserPassword } = require('../controllers/userController.js');
 //const { sendNewPasswordEmail } = require('../emailService');
 const authMiddleware = require('../middleware/authMiddleware.js');
 
-router.post('/register', registerUser);
 router.post('/login', loginUser);
 /*router.post('/forgot-password', async (req, res) => {
     const { username } = req.body;
@@ -37,6 +36,7 @@ router.post('/login', loginUser);
 });*/
 
 router.use(authMiddleware);
+router.post('/register', registerUser);
 router.put('/update/:username', updateUser);
 router.delete('/delete/:username', deleteUser);
 router.get('/logout/:username', logoutUser);

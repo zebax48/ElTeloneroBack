@@ -7,7 +7,8 @@ const participantSchema = new mongoose.Schema({
   documento: { type: String, required: true },
   telefono: { type: String, required: true },
   descripcion: { type: String },
-  enlaceTalento: { type: String }
+  enlaceTalento: { type: String },
+  votos: { type: Number, default: 0 }
 });
 
 module.exports = mongoose.model("Participant", participantSchema);

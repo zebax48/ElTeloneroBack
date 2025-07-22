@@ -18,7 +18,6 @@ const authMiddleware = async (req, res, next) => {
             return res.status(401).json({ message: 'Token revocado' });
         }
 
-        // Verificar si el token ha expirado
         if (decoded.exp < Date.now() / 1000) {
             return res.status(401).json({ message: 'La sesión a expirado' });
         }

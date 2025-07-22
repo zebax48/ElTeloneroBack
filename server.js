@@ -2,6 +2,7 @@ const express = require('express');
 const userRoutes = require('./routes/userRoutes');
 const eventRoutes = require("./routes/eventRoutes");
 const participantRoutes = require("./routes/participantRoutes");
+const votacionRoutes = require("./routes/votacionRoutes");
 const connectDB = require('./config');
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use("/api", eventRoutes);
 app.use("/api", participantRoutes);
+app.use("/api/votaciones", votacionRoutes);
 app.get('/', (req, res) => {
     res.send('Hello from Express!');
 });
