@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const RevokedToken = require('../models/RevokedToken');
 
 const registerUser = async (req, res) => {
+    console.log('Registering user with data:', req.body);
     const { username, password, nombreCompleto, correo} = req.body;
 
     try {
@@ -45,6 +46,7 @@ const getUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     const { username, password } = req.body;
+    console.log(req.body);
 
     try {
         let user = await User.findOne({ username });

@@ -34,9 +34,9 @@ router.post('/login', loginUser);
         return res.status(500).json({ message: 'Error al restablecer la contraseña.' });
     }
 });*/
-
-router.use(authMiddleware);
 router.post('/register', registerUser);
+router.use(authMiddleware);
+
 router.put('/update/:username', updateUser);
 router.delete('/delete/:username', deleteUser);
 router.get('/logout/:username', logoutUser);
