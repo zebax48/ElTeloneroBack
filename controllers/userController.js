@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const RevokedToken = require('../models/RevokedToken');
 
 const registerUser = async (req, res) => {
-    console.log('Registering user with data:', req.body);
     const { username, password, nombreCompleto, correo} = req.body;
 
     try {
@@ -46,7 +45,6 @@ const getUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     const { username, password } = req.body;
-    console.log(req.body);
 
     try {
         let user = await User.findOne({ username });
@@ -65,7 +63,6 @@ const loginUser = async (req, res) => {
         // Almacenar el token en la base de datos
         user.token = token;
         await user.save();
-        console.log('Token almacenado en la base de datos:', token);
        
         // Establecer el token como una cookie de sesión
         res.cookie('token', token, { httpOnly: true });
@@ -94,16 +91,13 @@ const logoutUser = async (req, res) => {
         }
 
         // Eliminar el token de sesión del usuario en la base de datos
-        console.log('Valor de user.token:', user.token);
         const revokedToken = user.token;
-        console.log('RT EN LOGOUT:', revokedToken);
         user.token = null;
         await user.save();
 
         // Agregar el token revocado a la lista de tokens revocados
         if (revokedToken) {
             await RevokedToken.create({ token: revokedToken });
-            console.log('Token agregado a la lista de tokens revocados');
         }
         // Eliminar la cookie de sesión
         res.clearCookie('token');

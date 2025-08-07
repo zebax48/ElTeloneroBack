@@ -1,13 +1,21 @@
 const Participant = require("../models/Participant");
+const Event = require("../models/Event");
 const Votacion = require("../models/Votacion");
 
 exports.registerParticipant = async (req, res) => {
   try {
+    const event = Event.findById(req.params.eventoId);
+    if (!event) return res.status(404).json({ error: 'Evento no encontrado' });
+    if (event.totalInscritos >= event.capacidad) {
+      return res.status(400).json({ error: 'El evento está lleno' });
+    }
+    event.totalInscritos += 1;
     const participant = new Participant({
       ...req.body,
       eventoId: req.params.eventoId
     });
     await participant.save();
+    await event.save();
     res.status(201).json(participant);
   } catch (err) {
     res.status(400).json({ error: err.message });

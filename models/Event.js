@@ -7,6 +7,9 @@ const eventSchema = new mongoose.Schema({
   descripcion: String,
   estado: { type: String, enum: ["abierto", "cerrado"], default: "abierto" },
   capacidad: Number,
+  votacionActiva: Boolean,
+  mostrarResultadosVotacion: Boolean,
+  totalInscritos: Number,
 });
 
 module.exports = mongoose.model("Event", eventSchema);

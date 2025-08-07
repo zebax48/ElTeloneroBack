@@ -4,7 +4,6 @@ const Evento = require('../models/Event');
 
 exports.crearVotacion = async (req, res) => {
   try {
-    console.log('Datos recibidos:', req.body);
     const { evento, participantes, duracionMinutos } = req.body;
 
     if (!evento || !participantes?.length || !duracionMinutos) {
@@ -15,7 +14,6 @@ exports.crearVotacion = async (req, res) => {
     if (!existeEvento) return res.status(404).json({ error: 'Evento no encontrado' });
 
     const participantesValidos = await Participante.find({ _id: { $in: participantes }, eventoId: evento });
-    console.log('Participantes válidos:', participantesValidos);
     if (participantesValidos.length !== participantes.length) {
       return res.status(400).json({ error: 'Algunos participantes no son válidos para este evento' });
     }

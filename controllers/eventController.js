@@ -27,3 +27,45 @@ exports.getEventById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getActiveVotingEvents = async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.eventId);
+    const isVotingActive = event.votacionActiva;
+    const isShowVotingResults = event.mostrarResultadosVotacion;
+    res.json({
+      votacionActiva: isVotingActive,
+      mostrarResultadosVotacion: isShowVotingResults
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.setVotacionStatus = async (req, res) => {
+  try {
+    const { eventId, status } = req.body;
+    const event = await Event.findById(eventId);
+    event.votacionActiva = status;
+    if (status) {
+      event.mostrarResultadosVotacion = false;
+    }
+    await event.save();
+    res.json({ message: 'Votación actualizada' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.setResultVotacionStatus = async (req, res) => {
+  try {
+    const { eventId, status } = req.body;
+    const event = await Event.findById(eventId);
+    event.mostrarResultadosVotacion = status;
+    event.votacionActiva = false;
+    await event.save();
+    res.json({ message: 'Resultados de votación actualizados' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

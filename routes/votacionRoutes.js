@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const votacionController = require('../controllers/votacionController');
+const authMiddleware = require('../middleware/authMiddleware.js');
 
-router.post('/', votacionController.crearVotacion);
-router.get('/', votacionController.obtenerVotaciones);
 router.get('/:id', votacionController.obtenerVotacionPorId);
+router.post('/', authMiddleware, votacionController.crearVotacion);
+router.get('/', authMiddleware, votacionController.obtenerVotaciones);
 
 module.exports = router;

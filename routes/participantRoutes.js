@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const participantController = require("../controllers/participantController");
+const authMiddleware = require('../middleware/authMiddleware.js');
 
-router.post("/eventos/:eventoId/registrar", participantController.registerParticipant);
-router.get("/eventos/:eventoId/participantes", participantController.getParticipantsByEvent);
 router.post("/votar", participantController.votarPorParticipante);
+router.post("/eventos/:eventoId/registrar", participantController.registerParticipant);
+
+router.get("/eventos/:eventoId/participantes", authMiddleware, participantController.getParticipantsByEvent);
+
 
 module.exports = router;
