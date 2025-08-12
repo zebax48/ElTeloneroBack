@@ -62,3 +62,20 @@ exports.votarPorParticipante = async (req, res) => {
     res.status(500).json({ error: 'Error del servidor' });
   }
 };
+
+// Resetear los votos de todos los participantes de un evento
+exports.resetVotesByEvent = async (req, res) => {
+  try {
+    const { eventoId } = req.params;
+    if (!eventoId) return res.status(400).json({ error: 'Evento ID requerido' });
+
+    const event = await Event.findById(eventoId);
+    if (!event) return res.status(404).json({ error: 'Evento no encontrado' });
+
+    const result = await Participant.updateMany({ eventoId }, { $set: { votos: 0 } });
+    return res.status(200).json({ mensaje: 'Votos reseteados', modificados: result.modifiedCount });
+  } catch (error) {
+    console.error('Error al resetear votos:', error);
+    return res.status(500).json({ error: 'Error del servidor' });
+  }
+};

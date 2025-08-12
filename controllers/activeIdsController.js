@@ -2,7 +2,7 @@ const ActiveIds = require("../models/ActiveIds");
 
 exports.getAllActiveIds = async (req, res) => {
     try {
-        const activeIds = await ActiveIds.find();
+    const activeIds = await ActiveIds.find().sort({ _id: -1 }).limit(1);
         res.json(activeIds);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -25,7 +25,12 @@ exports.createActiveIds = async (req, res) => {
 exports.setActiveEventId = async (req, res) => {
     try {
         const { eventId } = req.body;
-        const activeIds = await ActiveIds.findOneAndUpdate({ eventId }, { eventId }, { upsert: true });
+        // Ensure there's only one ActiveIds document
+        const activeIds = await ActiveIds.findOneAndUpdate(
+            {},
+            { $set: { eventId } },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
         res.status(200).json(activeIds);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -35,7 +40,12 @@ exports.setActiveEventId = async (req, res) => {
 exports.setActiveVotacionId = async (req, res) => {
     try {
         const { votacionId } = req.body;
-        const activeIds = await ActiveIds.findOneAndUpdate({ votacionId }, { votacionId }, { upsert: true });
+        // Ensure there's only one ActiveIds document
+        const activeIds = await ActiveIds.findOneAndUpdate(
+            {},
+            { $set: { votacionId } },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
         res.status(200).json(activeIds);
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -8,5 +8,8 @@ router.post("/eventos/:eventoId/registrar", participantController.registerPartic
 
 router.get("/eventos/:eventoId/participantes", authMiddleware, participantController.getParticipantsByEvent);
 
+// Resetear votos de todos los participantes de un evento (protegido)
+router.put("/eventos/:eventoId/reset-votos", authMiddleware, participantController.resetVotesByEvent);
+
 
 module.exports = router;
