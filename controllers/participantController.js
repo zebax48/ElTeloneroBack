@@ -4,18 +4,25 @@ const Votacion = require("../models/Votacion");
 
 exports.registerParticipant = async (req, res) => {
   try {
-    const event = Event.findById(req.params.eventoId);
+    const eventoId = req.params.eventoId;
+    const event = await Event.findById(eventoId);
     if (!event) return res.status(404).json({ error: 'Evento no encontrado' });
-    if (event.totalInscritos >= event.capacidad) {
+
+    const totalInscritos = typeof event.totalInscritos === 'number' ? event.totalInscritos : 0;
+    const capacidad = typeof event.capacidad === 'number' ? event.capacidad : 0;
+    if (capacidad && totalInscritos >= capacidad) {
       return res.status(400).json({ error: 'El evento está lleno' });
     }
-    event.totalInscritos += 1;
+
     const participant = new Participant({
       ...req.body,
-      eventoId: req.params.eventoId
+      eventoId
     });
     await participant.save();
-    await event.save();
+
+    // Incremento atómico para evitar condiciones de carrera
+    await Event.findByIdAndUpdate(eventoId, { $inc: { totalInscritos: 1 } });
+
     res.status(201).json(participant);
   } catch (err) {
     res.status(400).json({ error: err.message });
