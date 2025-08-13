@@ -150,14 +150,15 @@ exports.votar = async (req, res) => {
       return res.status(403).json({ error: 'La votación ha finalizado' });
     }
 
-    const participanteValido = votacion.participantes.includes(participanteId);
+  const participanteValido = votacion.participantes.some(p => p.toString() === String(participanteId));
     if (!participanteValido) {
       return res.status(400).json({ error: 'Participante no pertenece a esta votación' });
     }
 
-    // Aquí podrías guardar el voto en una colección "Votos" si deseas llevar conteo.
-    // Pero por ahora, solo confirmamos que se aceptó el voto.
-    res.json({ mensaje: '✅ Voto registrado exitosamente' });
+  // Incrementar el contador de votos del participante
+  await Participante.findByIdAndUpdate(participanteId, { $inc: { votos: 1 } });
+
+  res.json({ mensaje: '✅ Voto registrado exitosamente' });
   } catch (error) {
     console.error('Error al registrar el voto:', error);
     res.status(500).json({ error: 'Error del servidor' });
