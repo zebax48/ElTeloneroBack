@@ -14,6 +14,31 @@ exports.registerParticipant = async (req, res) => {
       return res.status(400).json({ error: 'El evento está lleno' });
     }
 
+    // Validación de enlaceTalento si viene informado
+    const rawLink = (req.body?.enlaceTalento || '').trim();
+    if (rawLink) {
+      if (rawLink.startsWith('@') || /\s/.test(rawLink)) {
+        return res.status(400).json({ error: 'El enlace de talento debe ser una URL válida (no se permiten @usuarios ni espacios).' });
+      }
+      const tryBuild = (val) => {
+        try {
+          const u = new URL(val);
+          const protocolOk = u.protocol === 'http:' || u.protocol === 'https:';
+          const hostOk = !!u.hostname && u.hostname.includes('.');
+          return protocolOk && hostOk ? u.toString() : null;
+        } catch {
+          return null;
+        }
+      };
+      let normalized = rawLink.startsWith('http://') || rawLink.startsWith('https://')
+        ? tryBuild(rawLink)
+        : tryBuild(`https://${rawLink}`);
+      if (!normalized) {
+        return res.status(400).json({ error: 'El enlace de talento no es válido. Ejemplo: https://youtu.be/tu-video' });
+      }
+      req.body.enlaceTalento = normalized;
+    }
+
     const participant = new Participant({
       ...req.body,
       eventoId
