@@ -100,7 +100,8 @@ exports.obtenerVotacionPorId = async (req, res) => {
   activa,
       minutosRestantes: activa ? Math.max(0, Math.ceil((fin - now) / 60000)) : 0,
   minutosParaIniciar,
-  estado
+  estado,
+  serverNowMs: now
     });
   } catch (error) {
     console.error('Error al obtener votación:', error);
