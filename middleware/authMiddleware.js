@@ -2,11 +2,14 @@ const jwt = require('jsonwebtoken');
 const RevokedToken = require('../models/RevokedToken');
 
 const authMiddleware = async (req, res, next) => {
-    const token = req.header('Authorization');
+    const rawToken = req.header('Authorization');
 
-    if (!token) {
+    if (!rawToken) {
         return res.status(401).json({ message: 'No hay token, autorización denegada' });
     }
+
+    // Acepta tanto "Bearer <token>" (Postman / estándar) como el JWT directo (legacy)
+    const token = rawToken.startsWith('Bearer ') ? rawToken.slice(7) : rawToken;
 
     try {
         const decoded = jwt.verify(token, 'jwtSecret');
